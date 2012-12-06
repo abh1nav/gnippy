@@ -24,3 +24,5 @@ GNIP for Python provides an easy way to access the PowerTrack stream provided by
     client.disconnect()
 
 That's it!
+
+Source available on GitHub: http://github.com/abh1nav/gnippy/
