@@ -5,13 +5,13 @@ gnippy provides an easy way to access the `Power Track <http://gnip.com/twitter/
 
 Installation:
 
-.. code-block:: pycon
+.. code-block:: python
 
     pip install gnippy
 
 Usage:
 
-.. code-block:: pycon
+.. code-block:: python
 
     #!/usr/bin/env python
 
