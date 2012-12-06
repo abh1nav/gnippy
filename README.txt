@@ -4,6 +4,12 @@ GNIP for Python
 
 GNIP for Python provides an easy way to access the PowerTrack stream provided by GNIP.
 
+Installation:
+
+    pip install gnippy
+
+Usage:
+
     #!/usr/bin/env python
 
     import time
