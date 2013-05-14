@@ -46,7 +46,7 @@ class Worker(threading.Thread):
 		return self._stop.isSet()
 	
 	def run(self):
-		r = requests.get(self.url, auth=self.auth, prefetch=False)
+		r = requests.get(self.url, auth=self.auth, stream=True)
 		for line in r.iter_lines():
 			if self.stopped():
 				break
