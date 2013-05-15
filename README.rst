@@ -14,7 +14,6 @@ Quickstart:
 .. code-block:: python
 
     #!/usr/bin/env python
-
     import time
     from gnippy import PowerTrackClient
 
@@ -49,9 +48,7 @@ This file can be stored in an alternate location and be passed in as a parameter
 .. code-block:: python
 
     client = PowerTrackClient(callback) # if you have a ~/.gnippy file ready to rock
-
     # OR
-
     client = PowerTrackClient(callback, config_file_path="/etc/.gnippy")
 
 
