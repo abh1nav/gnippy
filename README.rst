@@ -49,7 +49,7 @@ This file can be stored in an alternate location and be passed in as a parameter
 
     client = PowerTrackClient(callback) # if you have a ~/.gnippy file ready to rock
     # OR
-    client = PowerTrackClient(callback, config_file_path="/etc/.gnippy")
+    client = PowerTrackClient(callback, config_file_path="/etc/gnippy")
 
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/
