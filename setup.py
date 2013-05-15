@@ -1,15 +1,40 @@
-from distutils.core import setup
+#!/usr/bin/env python
+
+import os
+import sys
+
+import gnippy
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+if sys.argv[-1] == "publish":
+    os.system("python setup.py sdist upload")
+    sys.exit(1)
+
+# These are required because sometimes PyPI refuses to bundle certain files
+try:
+    long_desc = open('README').read()
+except:
+    long_desc = ""
+
+try:
+    license = open('LICENSE.txt').read()
+except:
+    license = "Apache 2.0 License"
 
 setup(
     name='gnippy',
-    version='0.1.3',
+    version=gnippy.__version__,
     description='Python library for GNIP.',
+    long_description=long_desc,
     author='Abhinav Ajgaonkar',
     author_email='abhinav316@gmail.com',
     packages=['gnippy'],
     url='http://pypi.python.org/pypi/gnippy/',
-    license=open('LICENSE.txt').read(),
-    long_description=open('README.rst').read(),
+    license=license,
     install_requires=[
         "requests == 1.2.0"
     ]
