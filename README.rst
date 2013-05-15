@@ -1,5 +1,5 @@
-gnippy: GNIP + Python
-=====================
+gnippy: Python library for GNIP
+===============================
 
 gnippy provides an easy way to access the `Power Track <http://gnip.com/twitter/power-track/>`_ stream provided by GNIP.
 
