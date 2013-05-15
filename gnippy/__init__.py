@@ -2,7 +2,7 @@
 # gnippy - GNIP for Python
 
 __title__ = 'gnippy'
-__version__ = '0.1.4'
+__version__ = '0.2.0'
 __author__ = 'Abhinav Ajgaonkar'
 __license__ = 'Apache 2.0'
 __copyright__ = 'Copyright 2012-2013 Abhinav Ajgaonkar'
