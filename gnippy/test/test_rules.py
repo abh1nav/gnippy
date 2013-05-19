@@ -25,8 +25,8 @@ class RulesTestCase(unittest.TestCase):
 
     def _generate_rules_list(self):
         rules_list = []
-        rules_list.append(rules.build_rule(self.rule_string))
-        rules_list.append(rules.build_rule(self.rule_string, self.tag))
+        rules_list.append(rules.build(self.rule_string))
+        rules_list.append(rules.build(self.rule_string, self.tag))
         return rules_list
 
     def setUp(self):
@@ -89,19 +89,19 @@ class RulesTestCase(unittest.TestCase):
 
     def test_build_rule_bad_args(self):
         try:
-            rules.build_rule(None)
+            rules.build(None)
         except BadArgumentException:
             return
         self.fail("rules.build_rule was supposed to throw a BadArgumentException")
 
     def test_build_rule_without_tag(self):
-        r = rules.build_rule(self.rule_string)
+        r = rules.build(self.rule_string)
         self.assertEqual(r['value'], self.rule_string)
         self.assertFalse("tag" in r)
         rules._check_rules_list([r])
 
     def test_build_rule_with_tag(self):
-        r = rules.build_rule(self.rule_string, tag=self.tag)
+        r = rules.build(self.rule_string, tag=self.tag)
         self.assertEqual(r['value'], self.rule_string)
         self.assertEqual(r['tag'], self.tag)
         rules._check_rules_list([r])

@@ -81,7 +81,7 @@ def _post(conf, built_rules):
         raise RuleAddFailedException(error_text)
 
 
-def build_rule(rule_string, tag=None):
+def build(rule_string, tag=None):
     """
         Takes a rule string and optional tag and turns it into a "built_rule" that looks like:
         { "value": "rule string", "tag": "my tag" }
@@ -94,10 +94,10 @@ def build_rule(rule_string, tag=None):
     return rule
 
 
-def add_rule(rule_string, rule_tag, **kwargs):
+def add_rule(rule_string, tag=None, **kwargs):
     """ Synchronously add a single rule to GNIP PowerTrack. """
     conf = config.resolve(kwargs)
-    rule = build_rule(rule_string, rule_tag)
+    rule = build(rule_string, tag)
     rules_list = [rule,]
     _post(conf, rules_list)
 

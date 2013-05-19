@@ -67,8 +67,8 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
 
     # OR ... add multiple rules at once
     rule_list = []
-    rule_list.append(rules.build_rule("Hello World", tag="asdf"))
-    rule_list.append(rules.build_rule("Rule Without a Tag"))
+    rule_list.append(rules.build("Hello World", tag="asdf"))
+    rule_list.append(rules.build("Rule Without a Tag"))
     try:
         rules.add_rules(rule_list)
     except RuleAddFailedException:
