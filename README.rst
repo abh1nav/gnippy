@@ -10,8 +10,8 @@ Installation:
 
     pip install gnippy
 
-Quickstart:
-
+Quickstart
+----------
 Create a .gnippy file and place it in your home directory. It should contain the following:
 
 .. code-block:: text
@@ -47,10 +47,12 @@ If you don't want to create a config file or you want it put it in another locat
 
 .. code-block:: python
 
-    client = PowerTrackClient(callback, url = "http://my.gnip.powertrack/url.json", auth = ('MyUserName', 'MyPassword'))
-    # OR
     client = PowerTrackClient(callback, config_file_path="/etc/gnippy")
+    # OR
+    client = PowerTrackClient(callback, url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd")) # overrides config files
 
+PowerTrack Rules
+----------------
 
 If you want to add `rules <http://support.gnip.com/customer/portal/articles/477713-rules-methods-documentation>`_ to your PowerTrack:
 
@@ -73,5 +75,8 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
         rules.add_rules(rule_list)
     except RuleAddFailedException:
         pass # uh oh
+
+    # OR ... manually pass in params - overrides any config files
+    rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd"))
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/

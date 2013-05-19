@@ -6,3 +6,4 @@ v0.1.4  2013-05-15 -- Fixing broken pip install.
 v0.2.0  2013-05-15 -- Adding support for file based configuration. Adding unit tests.
 v0.3.0  2013-05-19 -- Adding initial support for the Rules API and tests.
 v0.3.1  2013-05-19 -- Bugfixes for the rules API URL generation.
+v0.3.2  2013-05-19 -- Renaming build_rule() to just build().
