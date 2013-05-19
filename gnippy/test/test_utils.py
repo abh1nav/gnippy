@@ -10,7 +10,6 @@ test_password = "testP@ssw0rd"
 test_powertrack_url = "http://hello.world.com/this/is/a/powertrack/url.json"
 
 
-
 def _add_credentials(parser):
     """ Add the Credentials section to a ConfigParser. """
     parser.add_section("Credentials")
@@ -80,3 +79,24 @@ def get_possible_home_dirs():
 
 def get_possible_config_locations():
     return [os.path.join(i, ".gnippy") for i in get_possible_home_dirs()]
+
+def os_file_exists_false(path):
+    """ Used to patch the os.path.isfile method in tests. """
+    return False
+
+class Response():
+    """ Various sub-classes of Response are used by Mocks throughout tests. """
+    status_code = None
+    text = None
+
+    def __init__(self, response_code, text):
+        self.status_code = response_code
+        self.text = text
+
+class BadResponse(Response):
+    def __init__(self):
+        Response.__init__(self, 500, "Internal Server Error")
+
+class GoodResponse(Response):
+    def __init__(self):
+        Response.__init__(self, 200, "All OK")

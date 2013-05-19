@@ -2,6 +2,7 @@ gnippy: Python library for GNIP
 ===============================
 
 gnippy provides an easy way to access the `Power Track <http://gnip.com/twitter/power-track/>`_ stream provided by GNIP.
+You can also use gnippy to programatically add rules to your Power Track stream.
 
 Installation:
 
@@ -10,6 +11,19 @@ Installation:
     pip install gnippy
 
 Quickstart:
+
+Create a .gnippy file and place it in your home directory. It should contain the following:
+
+.. code-block:: text
+
+    [Credentials]
+    username = user@company.com
+    password = mypassword
+
+    [PowerTrack]
+    url = https://my.gnip.powertrack/url.json
+
+Fire up the client:
 
 .. code-block:: python
 
@@ -22,34 +36,42 @@ Quickstart:
         print activity
 
     # Create the client
-    url = "http://my.gnip.powertrack/url.json"
-    auth = ('MyUserName', 'MyPassword')
-    client = PowerTrackClient(callback, url=url, auth=auth)
+    client = PowerTrackClient(callback)
     client.connect()
     
     # Wait for 2 minutes and then disconnect
     time.sleep(120)
     client.disconnect()
 
-If no credentials/url is/are provided, gnippy will look for a boto-style .gnippy file in the user's home directory.
-The structure of a .gnippy file is as follows:
-
-.. code-block:: text
-
-    [Credentials]
-    username = user@company.com
-    password = mypassword
-
-    [PowerTrack]
-    url = https://my.gnip.powertrack/url.json
-
-This file can be stored in an alternate location and be passed in as a parameter to the constructor.
+If you don't want to create a config file or you want it put it in another location:
 
 .. code-block:: python
 
-    client = PowerTrackClient(callback) # if you have a ~/.gnippy file ready to rock
+    client = PowerTrackClient(callback, url = "http://my.gnip.powertrack/url.json", auth = ('MyUserName', 'MyPassword'))
     # OR
     client = PowerTrackClient(callback, config_file_path="/etc/gnippy")
 
+
+If you want to add `rules <http://support.gnip.com/customer/portal/articles/477713-rules-methods-documentation>`_ to your PowerTrack:
+
+.. code-block:: python
+
+    from gnippy import rules
+    from gnippy.errors import RuleAddFailedException
+
+    # Add a
+    try:
+        rules.add_rule('(Hello OR World OR "this is a test") AND lang:en', tag="MyRule") # The tag is optional
+    except RuleAddFailedException:
+        pass # uh oh
+
+    # OR ... add multiple rules at once
+    rule_list = []
+    rule_list.append(rules.build_rule("Hello World", tag="asdf"))
+    rule_list.append(rules.build_rule("Rule Without a Tag"))
+    try:
+        rules.add_rules(rule_list)
+    except RuleAddFailedException:
+        pass # uh oh
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/

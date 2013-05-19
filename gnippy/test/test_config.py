@@ -38,3 +38,11 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(result['Credentials']['username'], test_utils.test_username)
         self.assertEqual(result['Credentials']['password'], test_utils.test_password)
         self.assertEqual(result['PowerTrack']['url'], None)
+
+    def test_resolve_file_arg(self):
+        """ Run the "resolve" method with just a filename and check if all info is loaded. """
+        test_utils.generate_test_config_file()
+        conf = gnippy_config.resolve({"config_file_path": test_utils.test_config_path})
+        self.assertEqual(conf['auth'][0], test_utils.test_username)
+        self.assertEqual(conf['auth'][1], test_utils.test_password)
+        self.assertEqual(conf['url'], test_utils.test_powertrack_url)

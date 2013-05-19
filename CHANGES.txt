@@ -1,4 +1,7 @@
 v0.1.0, 2012-12-06 -- Initial release.
 v0.1.1, 2012-12-06 -- Bugfix in constructor.
 v0.1.2, 2012-12-06 -- Adding background worker to prevent blocking while data is being fetched.
-v0.1.3, 2013-05014 -- Upgrading to requests v1.2.0
+v0.1.3, 2013-05-14 -- Upgrading to requests v1.2.0.
+v0.1.4  2013-05-15 -- Fixing broken pip install.
+v0.2.0  2013-05-15 -- Adding support for file based configuration. Adding unit tests.
+v0.3.0  2013-05-19 -- Adding initial support for the Rules API and tests.

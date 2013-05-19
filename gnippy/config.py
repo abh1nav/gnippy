@@ -3,10 +3,7 @@
 import ConfigParser
 import os
 
-
-class ConfigNotFoundException(Exception):
-    """ Raised when no .gnippy file is found. """
-    pass
+from gnippy.errors import ConfigFileNotFoundException, IncompleteConfigurationException
 
 
 def get_default_config_file_path():
@@ -34,14 +31,12 @@ def get_default_config_file_path():
 
 def get_config(config_file_path=None):
     """
-        Parses the .gnippy file at the provided location. If no location
-        was provided, the default path is checked.
+        Parses the .gnippy file at the provided location.
+        Returns a dictionary with all the possible configuration options,
+        with None for the options that were not provided.
     """
-    if config_file_path is None:
-        config_file_path = get_default_config_file_path()
-
     if not os.path.isfile(config_file_path):
-        raise ConfigNotFoundException("Could not find %s" % config_file_path)
+        raise ConfigFileNotFoundException("Could not find %s" % config_file_path)
 
     # Attempt to parse the config file
     result = {}
@@ -68,3 +63,45 @@ def get_config(config_file_path=None):
         result[section] = values
 
     return result
+
+
+def resolve(kwarg_dict):
+    """
+        Look for auth and url info in the kwargs.
+        If they don't exist, look for a config file path and resolve auth & url info from it.
+        If no config file path exists, try to load the config file from the default path.
+        If this method returns without errors, the dictionary is guaranteed to contain:
+        {
+            "auth": ("username", "password"),
+            "url": "PowerTrackUrl"
+        }
+    """
+    conf = {}
+    if "auth" in kwarg_dict:
+        conf['auth'] = kwarg_dict['auth']
+
+    if "url" in kwarg_dict:
+        conf['url'] = kwarg_dict['url']
+
+    if "auth" not in conf or "url" not in conf:
+        if "config_file_path" in kwarg_dict:
+            file_conf = get_config(config_file_path=kwarg_dict['config_file_path'])
+
+        else:
+            file_conf = get_config(config_file_path=get_default_config_file_path())
+
+        if "auth" not in conf:
+            creds = file_conf['Credentials']
+            if creds['username'] and creds['password']:
+                conf['auth'] = (creds['username'], creds['password'])
+            else:
+                raise IncompleteConfigurationException("Incomplete authentication information provided. Please provide"\
+                                                       + " a username and password.")
+
+        if "url" not in conf:
+            if file_conf['PowerTrack']['url']:
+                conf['url'] = file_conf['PowerTrack']['url']
+            else:
+                raise IncompleteConfigurationException("Please provide a PowerTrack url.")
+
+    return conf

@@ -15,14 +15,11 @@ class PowerTrackClient():
     url = None
     auth = None
 
-    def __init__(self, callback, url=None, auth=None, config_file_path=None):
+    def __init__(self, callback, **kwargs):
         self.callback = callback
-
-        if None in (url, auth):
-            self.load_config_from_file(url, auth, config_file_path)
-        else:
-            self.url = url
-            self.auth = auth
+        c = config.resolve(kwargs)
+        self.url = c['url']
+        self.auth = c['auth']
 
     def connect(self):
         self.worker = Worker(self.url, self.auth, self.callback)
