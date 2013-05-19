@@ -7,7 +7,8 @@ import pwd
 test_config_path = "/tmp/.gnippy"
 test_username = "TestUserName"
 test_password = "testP@ssw0rd"
-test_powertrack_url = "http://hello.world.com/this/is/a/powertrack/url.json"
+test_powertrack_url = "https://stream.gnip.com:443/accounts/Organization/publishers/twitter/streams/track/Production.json"
+test_rules_url = "https://api.gnip.com:443/accounts/Organization/publishers/twitter/streams/track/Production/rules.json"
 
 
 def _add_credentials(parser):

@@ -36,8 +36,8 @@ class RulesTestCase(unittest.TestCase):
         test_utils.delete_test_config()
 
     def test_build_rules_url(self):
-        url = "http://google.com/asdf.json"
-        expected = "http://google.com/asdf/rules.json"
+        url = test_utils.test_powertrack_url
+        expected = test_utils.test_rules_url
         rules_url = rules._generate_rules_url(url)
         self.assertEqual(expected, rules_url)
 

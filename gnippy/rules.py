@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import requests
 
 from gnippy import config
@@ -10,7 +12,10 @@ def _generate_rules_url(url):
     """ Generate a rules URL from a PowerTrack URL """
     if ".json" not in url:
         raise BadPowerTrackUrlException("Doesn't end with .json")
-    return url.replace(".json", "/rules.json")
+    if "stream.gnip.com" not in url:
+        raise BadPowerTrackUrlException("Doesn't contain stream.gnip.com")
+
+    return url.replace(".json", "/rules.json").replace("stream.gnip.com", "api.gnip.com")
 
 
 def _generate_post_object(rules_list):
@@ -66,7 +71,10 @@ def _post(conf, built_rules):
     """
     _check_rules_list(built_rules)
     rules_url = _generate_rules_url(conf['url'])
-    post_data = _generate_post_object(built_rules)
+    post_data = json.dumps(_generate_post_object(built_rules))
+    print conf['auth']
+    print rules_url
+    print post_data
     r = requests.post(rules_url, auth=conf['auth'], data=post_data)
     if not r.status_code in range(200,300):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
