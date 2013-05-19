@@ -4,8 +4,8 @@ gnippy: Python library for GNIP
 gnippy provides an easy way to access the `Power Track <http://gnip.com/twitter/power-track/>`_ stream provided by GNIP.
 You can also use gnippy to programatically add rules to your Power Track stream.
 
-Installation:
-
+Install
+-------
 .. code-block:: python
 
     pip install gnippy
@@ -48,8 +48,8 @@ If you don't want to create a config file or you want it put it in another locat
 .. code-block:: python
 
     client = PowerTrackClient(callback, config_file_path="/etc/gnippy")
-    # OR
-    client = PowerTrackClient(callback, url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd")) # overrides config files
+    # OR ... provide the url and authentication credentials to override any config files
+    client = PowerTrackClient(callback, url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd"))
 
 PowerTrack Rules
 ----------------
@@ -61,13 +61,14 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
     from gnippy import rules
     from gnippy.errors import RuleAddFailedException
 
-    # Add a
+    # Synchronously add rules
     try:
-        rules.add_rule('(Hello OR World OR "this is a test") AND lang:en', tag="MyRule") # The tag is optional
+        rules.add_rule('(Hello OR World OR "this is a test") AND lang:en', tag="MyRule")
+        rules.add_rule('Rule without a tag')
     except RuleAddFailedException:
         pass # uh oh
 
-    # OR ... add multiple rules at once
+    # OR ... synchronously add multiple rules at once
     rule_list = []
     rule_list.append(rules.build("Hello World", tag="asdf"))
     rule_list.append(rules.build("Rule Without a Tag"))
@@ -77,6 +78,7 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
         pass # uh oh
 
     # OR ... manually pass in params - overrides any config files
-    rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd"))
+    rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", \
+                   auth=("uname", "pwd"))
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/
