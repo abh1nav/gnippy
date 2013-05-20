@@ -78,6 +78,30 @@ def _post(conf, built_rules):
         raise RuleAddFailedException(error_text)
 
 
+def _delete(conf, built_rules):
+    """
+        Generate the Rules URL and make a DELETE request.
+        DELETE data must look like:
+        {
+            "rules": [
+                        {"value":"rule1", "tag":"tag1"},
+                        {"value":"rule2"}
+                     ]
+        }
+
+        Args:
+            conf: A configuration object that contains auth and url info.
+            built_rules: A single or list of built rules.
+    """
+    _check_rules_list(built_rules)
+    rules_url = _generate_rules_url(conf['url'])
+    delete_data = json.dumps(_generate_post_object(built_rules))
+    r = requests.delete(rules_url, auth=conf['auth'], data=delete_data)
+    if not r.status_code in range(200,300):
+        error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
+        raise RuleDeleteFailedException(error_text)
+
+
 def build(rule_string, tag=None):
     """
         Takes a rule string and optional tag and turns it into a "built_rule" that looks like:
@@ -143,3 +167,15 @@ def get_rules(**kwargs):
     else:
         fail("GNIP API response did not return a rules object")
 
+
+def delete_rule(rule_dict, **kwargs):
+    """ Synchronously delete a single rule from GNIP PowerTrack. """
+    conf = config.resolve(kwargs)
+    rules_list = [rule_dict,]
+    _delete(conf, rules_list)
+
+
+def delete_rules(rules_list, **kwargs):
+    """ Synchronously delete multiple rules from GNIP PowerTrack. """
+    conf = config.resolve(kwargs)
+    _delete(conf, rules_list)

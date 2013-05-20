@@ -42,6 +42,14 @@ def good_get_one_rule(url, auth):
     return test_utils.GoodResponse(json={"rules":[{"value": "Hello", "tag": "mytag"}]})
 
 
+def bad_delete(url, auth, data):
+    return test_utils.BadResponse()
+
+
+def good_delete(url, auth, data):
+    return test_utils.GoodResponse()
+
+
 class RulesTestCase(unittest.TestCase):
 
     rule_string = "Hello OR World"
@@ -218,3 +226,15 @@ class RulesTestCase(unittest.TestCase):
     def test_get_rules_success_one_rule(self):
         r = rules.get_rules(config_file_path=test_utils.test_config_path)
         self.assertEqual(1, len(r))
+
+    @mock.patch('requests.delete', good_delete)
+    def test_delete_rules_single(self):
+        rules.delete_rule({"value": "Hello World"}, config_file_path=test_utils.test_config_path)
+
+    @mock.patch('requests.delete', good_delete)
+    def test_delete_rules_multiple(self):
+        rules_list = [
+            { "value": "Hello World" },
+            { "value": "Hello", "tag": "mytag" }
+        ]
+        rules.delete_rules(rules_list, config_file_path=test_utils.test_config_path)

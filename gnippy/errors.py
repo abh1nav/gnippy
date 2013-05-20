@@ -33,3 +33,8 @@ class RulesGetFailedException(Exception):
 class BadPowerTrackUrlException(Exception):
     """ Raised when the PowerTrack URL looks like its incorrect. """
     pass
+
+
+class RuleDeleteFailedException(Exception):
+    """ Raised when a rule delete fails. """
+    pass

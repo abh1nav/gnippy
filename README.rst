@@ -100,4 +100,22 @@ Listing Active PowerTrack Rules
   except RulesGetFailedException:
       pass # uh oh
 
+Deleting PowerTrack Rules
+-------------------------
+
+.. code-block:: python
+
+    from gnippy import rules
+    from gnippy.errors import RuleDeleteFailedException, RulesGetFailedException
+
+    try:
+        rules_list = rules.get_rules()
+        # Suppose I want to delete the first rule in the list
+        rules.delete_rule(rules_list[0])
+        # OR ... I want to delete ALL rules
+        rules.delete_rules(rules_list)
+
+    except RuleDeleteFailedException, RulesGetFailedException:
+        pass # uh oh
+
 Source available on GitHub: http://github.com/abh1nav/gnippy/
