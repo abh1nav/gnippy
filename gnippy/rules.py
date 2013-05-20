@@ -72,9 +72,6 @@ def _post(conf, built_rules):
     _check_rules_list(built_rules)
     rules_url = _generate_rules_url(conf['url'])
     post_data = json.dumps(_generate_post_object(built_rules))
-    print conf['auth']
-    print rules_url
-    print post_data
     r = requests.post(rules_url, auth=conf['auth'], data=post_data)
     if not r.status_code in range(200,300):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
@@ -106,3 +103,43 @@ def add_rules(rules_list, **kwargs):
     """ Synchronously add multiple rules to GNIP PowerTrack in one go. """
     conf = config.resolve(kwargs)
     _post(conf, rules_list)
+
+
+def get_rules(**kwargs):
+    """
+        Get all the rules currently applied to PowerTrack.
+        Optional Args:
+            url: Specify this arg if you're working with a PowerTrack connection that's not listed in your .gnippy file.
+            auth: Specify this arg if you want to override the credentials in your .gnippy file.
+
+        Returns:
+            A list of currently applied rules in the form:
+            [
+                { "value": "(Hello OR World) AND lang:en" },
+                { "value": "Hello", "tag": "mytag" }
+            ]
+    """
+    conf = config.resolve(kwargs)
+    rules_url = _generate_rules_url(conf['url'])
+
+    def fail(reason):
+        raise RulesGetFailedException("Could not get current rules for '%s'. Reason: '%s'" % (rules_url, reason))
+
+    try:
+        r = requests.get(rules_url, auth=conf['auth'])
+    except Exception as e:
+        fail(str(e))
+
+    if r.status_code not in range(200,300):
+        fail("HTTP Status Code: %s" % r.status_code)
+
+    try:
+        rules_json = r.json()
+    except:
+        fail("GNIP API returned malformed JSON")
+
+    if "rules" in rules_json:
+        return rules_json['rules']
+    else:
+        fail("GNIP API response did not return a rules object")
+

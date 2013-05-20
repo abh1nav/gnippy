@@ -14,12 +14,19 @@ class BadArgumentException(Exception):
     """ Raised when an invalid argument is detected. """
     pass
 
+
 class RuleAddFailedException(Exception):
     """ Raised when a rule add fails. """
     pass
 
+
 class RulesListFormatException(Exception):
     """ Raised when rules_list is not in the correct format. """
+    pass
+
+
+class RulesGetFailedException(Exception):
+    """ Raised when listing the current rule set fails. """
     pass
 
 

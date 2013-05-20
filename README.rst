@@ -51,8 +51,8 @@ If you don't want to create a config file or you want it put it in another locat
     # OR ... provide the url and authentication credentials to override any config files
     client = PowerTrackClient(callback, url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd"))
 
-PowerTrack Rules
-----------------
+Adding PowerTrack Rules
+-----------------------
 
 If you want to add `rules <http://support.gnip.com/customer/portal/articles/477713-rules-methods-documentation>`_ to your PowerTrack:
 
@@ -80,5 +80,24 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
     # OR ... manually pass in params - overrides any config files
     rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", \
                    auth=("uname", "pwd"))
+
+
+Listing Active PowerTrack Rules
+-------------------------------
+
+.. code-block:: python
+
+  from gnippy import rules
+  from gnippy.errors import RulesGetFailedException
+
+  try:
+      rules_list = rules.get_rules()
+      # rules_list is in the format:
+      # [
+      #    { "value": "(Hello OR World) AND lang:en" },
+      #    { "value": "Hello", "tag": "mytag" }
+      # ]
+  except RulesGetFailedException:
+      pass # uh oh
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/

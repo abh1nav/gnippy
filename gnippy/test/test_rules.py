@@ -18,6 +18,30 @@ def good_post(url, auth, data):
     return test_utils.GoodResponse()
 
 
+def bad_get(url, auth):
+    return test_utils.BadResponse()
+
+
+def get_exception(url, auth):
+    raise Exception("This is a test exception")
+
+
+def get_json_exception(url, auth):
+    return test_utils.GoodResponseJsonError()
+
+
+def good_get_no_rules_field(url, auth):
+    return test_utils.GoodResponse(json={"hello": "world"})
+
+
+def good_get_no_rules(url, auth):
+    return test_utils.GoodResponse(json={"rules": []})
+
+
+def good_get_one_rule(url, auth):
+    return test_utils.GoodResponse(json={"rules":[{"value": "Hello", "tag": "mytag"}]})
+
+
 class RulesTestCase(unittest.TestCase):
 
     rule_string = "Hello OR World"
@@ -149,3 +173,48 @@ class RulesTestCase(unittest.TestCase):
         except RuleAddFailedException:
             return
         self.fail("Rule Add was supposed to fail and throw a RuleAddException")
+
+    @mock.patch('requests.get', get_exception)
+    def test_get_rules_requests_get_exception(self):
+        try:
+            r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        except RulesGetFailedException:
+            return
+        self.fail("rules.get() was supposed to throw a RulesGetFailedException")
+
+    @mock.patch('requests.get', bad_get)
+    def test_get_rules_bad_status_code(self):
+        try:
+            r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        except RulesGetFailedException as e:
+            self.assertTrue("HTTP Status Code" in str(e))
+            return
+        self.fail("rules.get() was supposed to throw a RulesGetFailedException")
+
+    @mock.patch('requests.get', get_json_exception)
+    def test_get_rules_bad_json(self):
+        try:
+            r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        except RulesGetFailedException as e:
+            self.assertTrue("GNIP API returned malformed JSON" in str(e))
+            return
+        self.fail("rules.get() was supposed to throw a RulesGetFailedException")
+
+    @mock.patch('requests.get', good_get_no_rules_field)
+    def test_get_rules_no_rules_field_json(self):
+        try:
+            r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        except RulesGetFailedException as e:
+            self.assertTrue("GNIP API response did not return a rules object" in str(e))
+            return
+        self.fail("rules.get() was supposed to throw a RulesGetFailedException")
+
+    @mock.patch('requests.get', good_get_no_rules)
+    def test_get_rules_success_no_rules(self):
+        r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        self.assertEqual(0, len(r))
+
+    @mock.patch('requests.get', good_get_one_rule)
+    def test_get_rules_success_one_rule(self):
+        r = rules.get_rules(config_file_path=test_utils.test_config_path)
+        self.assertEqual(1, len(r))
