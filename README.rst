@@ -1,6 +1,12 @@
 gnippy: Python library for GNIP
 ===============================
 
+.. image:: https://pypip.in/v/gnippy/badge.png
+        :target: https://pypi.python.org/pypi/gnippy
+
+.. image:: https://pypip.in/d/gnippy/badge.png
+        :target: https://pypi.python.org/pypi/gnippy
+
 gnippy provides an easy way to access the `Power Track <http://gnip.com/twitter/power-track/>`_ stream provided by GNIP.
 You can also use gnippy to programatically add rules to your Power Track stream.
 
