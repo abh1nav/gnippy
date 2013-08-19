@@ -3,7 +3,7 @@
 import os
 import sys
 
-import gnippy
+version = "0.3.6"
 
 try:
     from setuptools import setup
@@ -27,7 +27,7 @@ except:
 
 setup(
     name='gnippy',
-    version=gnippy.__version__,
+    version=version,
     description='Python library for GNIP.',
     long_description=long_desc,
     author='Abhinav Ajgaonkar',
