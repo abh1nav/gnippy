@@ -72,7 +72,7 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
         rules.add_rule('(Hello OR World OR "this is a test") AND lang:en', tag="MyRule")
         rules.add_rule('Rule without a tag')
     except RuleAddFailedException:
-        pass # uh oh
+        pass
 
     # OR ... synchronously add multiple rules at once
     rule_list = []
@@ -81,7 +81,7 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
     try:
         rules.add_rules(rule_list)
     except RuleAddFailedException:
-        pass # uh oh
+        pass
 
     # OR ... manually pass in params - overrides any config files
     rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", \
@@ -104,7 +104,7 @@ Listing Active PowerTrack Rules
       #    { "value": "Hello", "tag": "mytag" }
       # ]
   except RulesGetFailedException:
-      pass # uh oh
+      pass
 
 Deleting PowerTrack Rules
 -------------------------
@@ -122,6 +122,6 @@ Deleting PowerTrack Rules
         rules.delete_rules(rules_list)
 
     except RuleDeleteFailedException, RulesGetFailedException:
-        pass # uh oh
+        pass
 
 Source available on GitHub: http://github.com/abh1nav/gnippy/
