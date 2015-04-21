@@ -6,6 +6,8 @@ import requests
 
 from gnippy import config
 
+from contextlib import closing
+
 class PowerTrackClient():
     """
         PowerTrackClient allows you to connect to the GNIP
@@ -65,9 +67,9 @@ class Worker(threading.Thread):
         return self._stop.isSet()
 
     def run(self):
-        r = requests.get(self.url, auth=self.auth, stream=True)
-        for line in r.iter_lines():
-            if self.stopped():
-                break
-            elif line:
-                self.on_data(line)
+        with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
+            for line in r.iter_lines():
+                if self.stopped():
+                    break
+                elif line:
+                    self.on_data(line)
