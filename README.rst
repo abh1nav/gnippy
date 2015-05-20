@@ -69,7 +69,7 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
 
     # Synchronously add rules
     try:
-        rules.add_rule('(Hello OR World OR "this is a test") AND lang:en', tag="MyRule")
+        rules.add_rule('(Hello OR World OR "this is a test") lang:en', tag="MyRule")
         rules.add_rule('Rule without a tag')
     except RuleAddFailedException:
         pass
