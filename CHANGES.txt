@@ -9,3 +9,6 @@ v0.3.1  2013-05-19 -- Bugfixes for the rules API URL generation.
 v0.3.2  2013-05-19 -- Renaming build_rule() to just build().
 v0.3.3  2013-05-20 -- Adding the ability to list all current rules + unit tests
 v0.3.4  2013-05-20 -- Adding the ability to delete rules + unit tests
+--
+
+This file is no longer maintained. See "releases" on GitHub for a list of changes.
