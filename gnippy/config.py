@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import ConfigParser
+try:
+    import configparser as ConfigParser
+
+except ImportError:
+    import ConfigParser
+
 import os
 
 from gnippy.errors import ConfigFileNotFoundException, IncompleteConfigurationException
@@ -20,11 +25,11 @@ def get_default_config_file_path():
     # os.path.expanduser() will fail. Attempt to detect this case and use a
     # no-op expanduser function in this case.
     try:
-      os.path.expanduser('~')
-      expanduser = os.path.expanduser
+        os.path.expanduser('~')
+        expanduser = os.path.expanduser
     except (AttributeError, ImportError):
-      # This is probably running on App Engine.
-      expanduser = (lambda x: x)
+        # This is probably running on App Engine.
+        expanduser = (lambda x: x)
     # ---End borrowed section ---------------------------------------------
     return os.path.join(expanduser("~"), ".gnippy")
 
@@ -95,8 +100,9 @@ def resolve(kwarg_dict):
             if creds['username'] and creds['password']:
                 conf['auth'] = (creds['username'], creds['password'])
             else:
-                raise IncompleteConfigurationException("Incomplete authentication information provided. Please provide"\
-                                                       + " a username and password.")
+                raise IncompleteConfigurationException(
+                    "Incomplete authentication information provided. "
+                    "Please provide a username and password.")
 
         if "url" not in conf:
             if file_conf['PowerTrack']['url']:
