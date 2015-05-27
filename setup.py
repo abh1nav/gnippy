@@ -3,7 +3,7 @@
 import os
 import sys
 
-version = "0.3.8"
+version = "0.4.0"
 
 try:
     from setuptools import setup
@@ -25,9 +25,6 @@ try:
 except:
     license = "Apache 2.0 License"
 
-PY2 = sys.version_info < (3,)
-PY3 = not PY2
-
 setup(
     name='gnippy',
     version=version,
@@ -39,8 +36,6 @@ setup(
     url='http://pypi.python.org/pypi/gnippy/',
     license=license,
     install_requires=[
-        # Since this was explicitly requested for in older version, keep
-        # it as is. Use the latest requests for PY3
-        "requests == 1.2.0" if PY2 else "requests"
+        "requests==2.7.0"
     ]
 )
