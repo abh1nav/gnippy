@@ -58,13 +58,13 @@ class Worker(threading.Thread):
         self.url = url
         self.auth = auth
         self.on_data = callback
-        self._stop = threading.Event()
+        self._stop_event = threading.Event()
 
     def stop(self):
-        self._stop.set()
+        self._stop_event.set()
 
     def stopped(self):
-        return self._stop.isSet()
+        return self._stop_event.isSet()
 
     def run(self):
         with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
