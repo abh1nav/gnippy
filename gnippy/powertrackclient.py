@@ -68,6 +68,10 @@ class Worker(threading.Thread):
 
     def run(self):
         with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
+            if r.status_code != 200:
+                self.stop()
+                raise Exception("GNIP returned HTTP {}".format(r.status_code))
+
             for line in r.iter_lines():
                 if line:
                     self.on_data(line)

@@ -3,7 +3,7 @@
 import os
 import sys
 
-version = "0.4.1"
+version = "0.4.2"
 
 try:
     from setuptools import setup
@@ -36,6 +36,6 @@ setup(
     url='http://pypi.python.org/pypi/gnippy/',
     license=license,
     install_requires=[
-        "requests==2.7.0"
+        "requests==2.8.1"
     ]
 )
