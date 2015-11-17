@@ -40,7 +40,7 @@ def get_config(config_file_path=None):
         Returns a dictionary with all the possible configuration options,
         with None for the options that were not provided.
     """
-    if not os.path.isfile(config_file_path):
+    if os.path.isfile(config_file_path):
         raise ConfigFileNotFoundException("Could not find %s" % config_file_path)
 
     # Attempt to parse the config file
@@ -84,11 +84,20 @@ def resolve(kwarg_dict):
     conf = {}
     if "auth" in kwarg_dict:
         conf['auth'] = kwarg_dict['auth']
+    else:
+        username = os.getenv("GNIPPY_AUTH_USERNAME")
+        password = os.getenv("GNIPPY_AUTH_PASSWORD")
+
+        if username and password:
+            conf['auth'] = (username, password)
 
     if "url" in kwarg_dict:
         conf['url'] = kwarg_dict['url']
+    else:
+        conf['url'] = os.getenv("GNIPPY_URL")
 
     if "auth" not in conf or "url" not in conf:
+
         if "config_file_path" in kwarg_dict:
             file_conf = get_config(config_file_path=kwarg_dict['config_file_path'])
 
