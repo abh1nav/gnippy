@@ -40,7 +40,7 @@ def get_config(config_file_path=None):
         Returns a dictionary with all the possible configuration options,
         with None for the options that were not provided.
     """
-    if os.path.isfile(config_file_path):
+    if not os.path.isfile(config_file_path):
         raise ConfigFileNotFoundException("Could not find %s" % config_file_path)
 
     # Attempt to parse the config file
