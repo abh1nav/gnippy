@@ -49,6 +49,9 @@ Fire up the client:
     time.sleep(120)
     client.disconnect()
 
+Configuration
+-------------
+
 If you don't want to create a config file or you want it put it in another location:
 
 .. code-block:: python
@@ -56,6 +59,18 @@ If you don't want to create a config file or you want it put it in another locat
     client = PowerTrackClient(callback, config_file_path="/etc/gnippy")
     # OR ... provide the url and authentication credentials to override any config files
     client = PowerTrackClient(callback, url="http://my.gnip.powertrack/url.json", auth=("uname", "pwd"))
+
+You can also configure gnippy using environment variables:
+
+.. code-block:: text
+
+    GNIPPY_URL
+    GNIPPY_AUTH_USERNAME
+    GNIPPY_AUTH_PASSWORD
+
+
+
+
 
 Adding PowerTrack Rules
 -----------------------
