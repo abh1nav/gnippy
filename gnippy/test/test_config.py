@@ -4,6 +4,7 @@ import unittest
 
 from gnippy import config as gnippy_config
 from gnippy.test import test_utils
+import os
 
 class ConfigTestCase(unittest.TestCase):
 
@@ -13,6 +14,9 @@ class ConfigTestCase(unittest.TestCase):
     def tearDown(self):
         """ Delete the test config file at test_config_path """
         test_utils.delete_test_config()
+        os.unsetenv("GNIPPY_URL")
+        os.unsetenv("GNIPPY_AUTH_USERNAME")
+        os.unsetenv("GNIPPY_AUTH_PASSWORD")
 
     def test_default_path(self):
         """
@@ -46,3 +50,18 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(conf['auth'][0], test_utils.test_username)
         self.assertEqual(conf['auth'][1], test_utils.test_password)
         self.assertEqual(conf['url'], test_utils.test_powertrack_url)
+
+    def test_resolve_conf_from_environment_variables(self):
+
+        expected_url = test_utils.test_powertrack_url
+        expected_username = test_utils.test_username
+        expected_password = test_utils.test_password
+
+        os.environ["GNIPPY_URL"] = expected_url
+        os.environ["GNIPPY_AUTH_USERNAME"] = expected_username
+        os.environ["GNIPPY_AUTH_PASSWORD"] = expected_password
+
+        conf = gnippy_config.resolve({})
+        self.assertEqual(conf['url'], test_utils.test_powertrack_url)
+        self.assertEqual(conf['auth'][0], test_utils.test_username)
+        self.assertEqual(conf['auth'][1], test_utils.test_password)

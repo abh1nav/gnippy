@@ -73,6 +73,10 @@ def get_config(config_file_path=None):
 def resolve(kwarg_dict):
     """
         Look for auth and url info in the kwargs.
+        If they don't exist check for the environment variables
+        GNIPPY_URL
+        GNIPPY_AUTH_USERNAME
+        GNIPPY_AUTH_PASSWORD
         If they don't exist, look for a config file path and resolve auth & url info from it.
         If no config file path exists, try to load the config file from the default path.
         If this method returns without errors, the dictionary is guaranteed to contain:
@@ -84,11 +88,20 @@ def resolve(kwarg_dict):
     conf = {}
     if "auth" in kwarg_dict:
         conf['auth'] = kwarg_dict['auth']
+    else:
+        username = os.getenv("GNIPPY_AUTH_USERNAME")
+        password = os.getenv("GNIPPY_AUTH_PASSWORD")
+
+        if username and password:
+            conf['auth'] = (username, password)
 
     if "url" in kwarg_dict:
         conf['url'] = kwarg_dict['url']
+    else:
+        conf['url'] = os.getenv("GNIPPY_URL")
 
     if "auth" not in conf or "url" not in conf:
+
         if "config_file_path" in kwarg_dict:
             file_conf = get_config(config_file_path=kwarg_dict['config_file_path'])
 
