@@ -95,6 +95,10 @@ class RulesTestCase(unittest.TestCase):
         l = [ { "value": "hello" }, { "value": "h", "tag": "w" }]
         rules._check_rules_list(l)
 
+    def test_check_rule_tag_none(self):
+        l = [ { "value": "hello", "tag": None }, { "value": "h", "tag": "w" }]
+        rules._check_rules_list(l)
+
     def test_check_one_rule_typo_values(self):
         l = [ { "values": "hello" } ]
         try:

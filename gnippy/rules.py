@@ -46,8 +46,12 @@ def _check_rules_list(rules_list):
         if not isinstance(r['value'], basestring):
             fail()
 
-        if "tag" in r and not isinstance(r['tag'], basestring):
-            fail()
+        if "tag" in r:
+            rule_tag = r['tag']
+            if rule_tag is None or isinstance(rule_tag, basestring):
+                pass
+            else:
+                fail()
 
         for k in r:
             if k not in expected:
@@ -73,7 +77,7 @@ def _post(conf, built_rules):
     rules_url = _generate_rules_url(conf['url'])
     post_data = json.dumps(_generate_post_object(built_rules))
     r = requests.post(rules_url, auth=conf['auth'], data=post_data)
-    if not r.status_code in range(200,300):
+    if not r.status_code in range(200, 300):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
         raise RuleAddFailedException(error_text)
 
