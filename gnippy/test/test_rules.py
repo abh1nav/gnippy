@@ -231,11 +231,11 @@ class RulesTestCase(unittest.TestCase):
         r = rules.get_rules(config_file_path=test_utils.test_config_path)
         self.assertEqual(1, len(r))
 
-    @mock.patch('requests.delete', good_delete)
+    @mock.patch('requests.post', good_delete)
     def test_delete_rules_single(self):
         rules.delete_rule({"value": "Hello World"}, config_file_path=test_utils.test_config_path)
 
-    @mock.patch('requests.delete', good_delete)
+    @mock.patch('requests.post', good_delete)
     def test_delete_rules_multiple(self):
         rules_list = [
             { "value": "Hello World" },

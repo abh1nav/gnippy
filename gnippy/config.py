@@ -97,7 +97,7 @@ def resolve(kwarg_dict):
 
     if "url" in kwarg_dict:
         conf['url'] = kwarg_dict['url']
-    else:
+    elif os.getenv("GNIPPY_URL"):
         conf['url'] = os.getenv("GNIPPY_URL")
 
     if "auth" not in conf or "url" not in conf:

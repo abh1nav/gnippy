@@ -30,6 +30,20 @@ def _write_config_file(parser):
         parser.write(configfile)
 
 
+def set_environment_config_vars():
+    """ Set GNIPPY env variables. """
+    os.environ["GNIPPY_URL"] = test_powertrack_url
+    os.environ["GNIPPY_AUTH_USERNAME"] = test_username
+    os.environ["GNIPPY_AUTH_PASSWORD"] = test_password
+
+
+def unset_environment_config_vars():
+    """ Unset GNIPPY env variables. """
+    for k in ["GNIPPY_URL", "GNIPPY_AUTH_USERNAME", "GNIPPY_AUTH_PASSWORD"]:
+        if k in os.environ:
+            del os.environ[k]
+
+
 def delete_test_config():
     """ Delete the test config if it exists. """
     if os.path.isfile(test_config_path):
