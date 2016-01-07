@@ -1,4 +1,4 @@
-ndividual Contributor License Agreement ("Agreement") V2.0
+Individual Contributor License Agreement ("Agreement") V2.0
                    http://www.apache.org/licenses/
 
 Thank you for your interest in gnippy (the
