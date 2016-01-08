@@ -3,3 +3,4 @@
 *.pyc
 .idea*
 gnippy.egg-info*
+.python-version

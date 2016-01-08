@@ -2,14 +2,22 @@
 
 import os
 import unittest
+import mock
 
 from gnippy import PowerTrackClient
 from gnippy.test import test_utils
 
+
 def _dummy_callback(activity):
     pass
 
+
+def get_exception(*args, **kwargs):
+    raise Exception("This is a test exception")
+
+
 config_file = test_utils.test_config_path
+
 
 class PowerTrackClientTestCase(unittest.TestCase):
 
@@ -81,3 +89,19 @@ class PowerTrackClientTestCase(unittest.TestCase):
                 self.assertIsNotNone(client.auth)
                 self.assertIsNotNone(client.url)
                 self.assertTrue("http" in client.url and "://" in client.url)
+
+    @mock.patch('requests.get', get_exception)
+    def test_exception_with_callback(self):
+        """ When exception_callback is provided, worker uses it to communicate errors. """
+        test_utils.generate_test_config_file()
+
+        exception_callback = mock.Mock()
+
+        client = PowerTrackClient(_dummy_callback, exception_callback,
+                                  config_file_path=config_file)
+        client.connect()
+        self.assertTrue(exception_callback.called)
+        actual_exinfo = exception_callback.call_args[0][0]
+        actual_ex = actual_exinfo[1]
+        self.assertIsInstance(actual_ex, Exception)
+        self.assertEqual(actual_ex.message, "This is a test exception")
