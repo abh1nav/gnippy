@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
+import sys
 import threading
 
 import requests
@@ -17,14 +18,16 @@ class PowerTrackClient():
     url = None
     auth = None
 
-    def __init__(self, callback, **kwargs):
+    def __init__(self, callback, exception_callback=None, **kwargs):
         self.callback = callback
+        self.exception_callback = exception_callback
         c = config.resolve(kwargs)
         self.url = c['url']
         self.auth = c['auth']
 
     def connect(self):
-        self.worker = Worker(self.url, self.auth, self.callback)
+        self.worker = Worker(self.url, self.auth, self.callback,
+                             self.exception_callback)
         self.worker.setDaemon(True)
         self.worker.start()
 
@@ -53,11 +56,12 @@ class PowerTrackClient():
 
 class Worker(threading.Thread):
     """ Background worker to fetch data without blocking """
-    def __init__(self, url, auth, callback):
+    def __init__(self, url, auth, callback, exception_callback=None):
         super(Worker, self).__init__()
         self.url = url
         self.auth = auth
         self.on_data = callback
+        self.on_error = exception_callback
         self._stop_event = threading.Event()
 
     def stop(self):
@@ -67,14 +71,22 @@ class Worker(threading.Thread):
         return self._stop_event.isSet()
 
     def run(self):
-        with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
-            if r.status_code != 200:
-                self.stop()
-                raise Exception("GNIP returned HTTP {}".format(r.status_code))
+        try:
+            with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
+                if r.status_code != 200:
+                    self.stop()
+                    raise Exception("GNIP returned HTTP {}".format(r.status_code))
 
-            for line in r.iter_lines():
-                if line:
-                    self.on_data(line)
+                for line in r.iter_lines():
+                    if line:
+                        self.on_data(line)
 
-                if self.stopped():
-                    break
+                    if self.stopped():
+                        break
+        except Exception:
+            if self.on_error:
+                exinfo = sys.exc_info()
+                self.on_error(exinfo)
+            else:
+                # re-raise the last exception as-is
+                raise
