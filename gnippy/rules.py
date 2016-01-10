@@ -3,6 +3,7 @@
 import json
 
 import requests
+from six import string_types
 
 from gnippy import config
 from gnippy.errors import *
@@ -43,12 +44,12 @@ def _check_rules_list(rules_list):
         if "value" not in r:
             fail()
 
-        if not isinstance(r['value'], basestring):
+        if not isinstance(r['value'], string_types):
             fail()
 
         if "tag" in r:
             rule_tag = r['tag']
-            if rule_tag is None or isinstance(rule_tag, basestring):
+            if rule_tag is None or isinstance(rule_tag, string_types):
                 pass
             else:
                 fail()

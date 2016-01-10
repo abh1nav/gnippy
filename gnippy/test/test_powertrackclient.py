@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-import unittest
 import mock
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from gnippy import PowerTrackClient
 from gnippy.test import test_utils
@@ -12,8 +15,13 @@ def _dummy_callback(activity):
     pass
 
 
+class TestException(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
 def get_exception(*args, **kwargs):
-    raise Exception("This is a test exception")
+    raise TestException("This is a test exception")
 
 
 config_file = test_utils.test_config_path
