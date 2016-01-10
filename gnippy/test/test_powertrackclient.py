@@ -108,6 +108,7 @@ class PowerTrackClientTestCase(unittest.TestCase):
         client = PowerTrackClient(_dummy_callback, exception_callback,
                                   config_file_path=config_file)
         client.connect()
+        client.disconnect()
         self.assertTrue(exception_callback.called)
         actual_exinfo = exception_callback.call_args[0][0]
         actual_ex = actual_exinfo[1]
