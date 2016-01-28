@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
-from urlparse import urlparse
+
+try:
+    from urllib.parse import urlparse
+except:
+    from urlparse import urlparse
 
 import requests
 from six import string_types
