@@ -2,6 +2,11 @@
 
 import json
 
+try:
+    from urllib.parse import urlparse
+except:
+    from urlparse import urlparse
+
 import requests
 from six import string_types
 
@@ -82,6 +87,17 @@ def _post(conf, built_rules):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
         raise RuleAddFailedException(error_text)
 
+def _generate_delete_url(conf):
+    """
+        Generate the Rules URL for a DELETE request.
+    """
+    generated_url = _generate_rules_url(conf['url'])
+    parsed_url = urlparse(generated_url)
+    query = parsed_url.query
+    if query != '':
+        return generated_url.replace(query, query + "&_method=delete")
+    else:
+        return generated_url + "?_method=delete"
 
 def _delete(conf, built_rules):
     """
@@ -99,7 +115,7 @@ def _delete(conf, built_rules):
             built_rules: A single or list of built rules.
     """
     _check_rules_list(built_rules)
-    rules_url = _generate_rules_url(conf['url']) + "?_method=delete"
+    rules_url = _generate_delete_url(conf)
     delete_data = json.dumps(_generate_post_object(built_rules))
     r = requests.post(rules_url, auth=conf['auth'], data=delete_data)
     if not r.status_code in range(200,300):
