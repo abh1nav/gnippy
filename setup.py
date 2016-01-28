@@ -3,7 +3,7 @@
 import os
 import sys
 
-version = "0.5.0"
+version = "0.5.1"
 
 try:
     from setuptools import setup
