@@ -11,6 +11,13 @@ import os
 from gnippy.errors import ConfigFileNotFoundException, IncompleteConfigurationException
 
 
+# These are all the configurable settings by setting
+VALID_OPTIONS = {
+    "Credentials": ('username', 'password'),
+    "PowerTrack": ('url', 'rules_url')
+}
+
+
 def get_default_config_file_path():
     """
         Returns the absolute path to the default placement of the
@@ -48,14 +55,8 @@ def get_config(config_file_path=None):
     parser = ConfigParser.SafeConfigParser()
     parser.read(config_file_path)
 
-    # These are all the configurable settings by setting
-    options = {
-        "Credentials": ('username', 'password'),
-        "PowerTrack": ("url", )
-    }
-
-    for section in options:
-        keys = options[section]
+    for section in VALID_OPTIONS:
+        keys = VALID_OPTIONS[section]
         values = {}
         for key in keys:
             try:
@@ -75,6 +76,7 @@ def resolve(kwarg_dict):
         Look for auth and url info in the kwargs.
         If they don't exist check for the environment variables
         GNIPPY_URL
+        GNIPPY_RULES_URL
         GNIPPY_AUTH_USERNAME
         GNIPPY_AUTH_PASSWORD
         If they don't exist, look for a config file path and resolve auth & url info from it.
@@ -100,6 +102,11 @@ def resolve(kwarg_dict):
     elif os.getenv("GNIPPY_URL"):
         conf['url'] = os.getenv("GNIPPY_URL")
 
+    if 'rules_url' in kwarg_dict:
+        conf['rules_url'] = kwarg_dict['rules_url']
+    elif os.getenv('GNIPPY_RULES_URL'):
+        conf['rules_url'] = os.getenv("GNIPPY_RULES_URL")
+
     if "auth" not in conf or "url" not in conf:
 
         if "config_file_path" in kwarg_dict:
@@ -122,5 +129,11 @@ def resolve(kwarg_dict):
                 conf['url'] = file_conf['PowerTrack']['url']
             else:
                 raise IncompleteConfigurationException("Please provide a PowerTrack url.")
+
+        if "rules_url" not in conf and file_conf['PowerTrack']['rules_url']:
+            # Not raising an exception on missing rules_url, because user may
+            # only want to consume streaming data with PowerTrack client,
+            # so rules_url is optional.
+            conf['rules_url'] = file_conf['PowerTrack']['rules_url']
 
     return conf

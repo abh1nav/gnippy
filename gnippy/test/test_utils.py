@@ -22,10 +22,11 @@ def _add_credentials(parser):
     parser.set(u"Credentials", u"password", test_password)
 
 
-def _add_power_track_url(parser):
+def _add_power_track_urls(parser):
     """ Add the PowerTrack section to a ConfigParser. """
     parser.add_section("PowerTrack")
     parser.set("PowerTrack", "url", test_powertrack_url)
+    parser.set("PowerTrack", "rules_url", test_rules_url)
 
 
 def _write_config_file(parser):
@@ -42,13 +43,14 @@ def _write_config_file(parser):
 def set_environment_config_vars():
     """ Set GNIPPY env variables. """
     os.environ["GNIPPY_URL"] = test_powertrack_url
+    os.environ["GNIPPY_RULES_URL"] = test_rules_url
     os.environ["GNIPPY_AUTH_USERNAME"] = test_username
     os.environ["GNIPPY_AUTH_PASSWORD"] = test_password
 
 
 def unset_environment_config_vars():
     """ Unset GNIPPY env variables. """
-    for k in ["GNIPPY_URL", "GNIPPY_AUTH_USERNAME", "GNIPPY_AUTH_PASSWORD"]:
+    for k in ["GNIPPY_URL", "GNIPPY_RULES_URL", "GNIPPY_AUTH_USERNAME", "GNIPPY_AUTH_PASSWORD"]:
         if k in os.environ:
             del os.environ[k]
 
@@ -63,7 +65,7 @@ def generate_test_config_file():
     """ Generate a test config file at test_config_path """
     parser = ConfigParser.SafeConfigParser()
     _add_credentials(parser)
-    _add_power_track_url(parser)
+    _add_power_track_urls(parser)
     _write_config_file(parser)
 
 
@@ -77,7 +79,7 @@ def generate_test_config_file_with_only_auth():
 def generate_test_config_file_with_only_powertrack():
     """ Generate a test config file at test_config_path """
     parser = ConfigParser.SafeConfigParser()
-    _add_power_track_url(parser)
+    _add_power_track_urls(parser)
     _write_config_file(parser)
 
 

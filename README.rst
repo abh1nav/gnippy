@@ -68,6 +68,7 @@ You can also configure gnippy using environment variables:
 .. code-block:: text
 
     GNIPPY_URL
+    GNIPPY_RULES_URL
     GNIPPY_AUTH_USERNAME
     GNIPPY_AUTH_PASSWORD
 
