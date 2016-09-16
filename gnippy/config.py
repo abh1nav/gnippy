@@ -107,7 +107,7 @@ def resolve(kwarg_dict):
     elif os.getenv('GNIPPY_RULES_URL'):
         conf['rules_url'] = os.getenv("GNIPPY_RULES_URL")
 
-    if "auth" not in conf or "url" not in conf:
+    if "auth" not in conf or "url" not in conf or 'rules_url' not in conf:
 
         if "config_file_path" in kwarg_dict:
             file_conf = get_config(config_file_path=kwarg_dict['config_file_path'])
@@ -124,16 +124,18 @@ def resolve(kwarg_dict):
                     "Incomplete authentication information provided. "
                     "Please provide a username and password.")
 
-        if "url" not in conf:
-            if file_conf['PowerTrack']['url']:
-                conf['url'] = file_conf['PowerTrack']['url']
-            else:
-                raise IncompleteConfigurationException("Please provide a PowerTrack url.")
+        if "url" not in conf and file_conf['PowerTrack']['url']:
+            # Not raising an exception on missing url, because user may
+            # only want to manage rules, so streaming url is optional.
+            conf['url'] = file_conf['PowerTrack']['url']
 
         if "rules_url" not in conf and file_conf['PowerTrack']['rules_url']:
             # Not raising an exception on missing rules_url, because user may
             # only want to consume streaming data with PowerTrack client,
             # so rules_url is optional.
             conf['rules_url'] = file_conf['PowerTrack']['rules_url']
+
+        if 'url' not in conf and 'rules_url' not in conf:
+            raise IncompleteConfigurationException("Please provide a PowerTrack url or rules_url.")
 
     return conf

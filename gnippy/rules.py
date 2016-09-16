@@ -91,8 +91,8 @@ def _generate_delete_url(conf):
 
 def _delete(conf, built_rules):
     """
-        Generate the Rules URL and make a DELETE request.
-        DELETE data must look like:
+        Generate the Delete Rules URL and make a POST request.
+        POST data must look like:
         {
             "rules": [
                         {"value":"rule1", "tag":"tag1"},
@@ -143,7 +143,7 @@ def get_rules(**kwargs):
     """
         Get all the rules currently applied to PowerTrack.
         Optional Args:
-            url: Specify this arg if you're working with a PowerTrack connection that's not listed in your .gnippy file.
+            rules_url: Specify this arg if you're working with a PowerTrack connection that's not listed in your .gnippy file.
             auth: Specify this arg if you want to override the credentials in your .gnippy file.
 
         Returns:
