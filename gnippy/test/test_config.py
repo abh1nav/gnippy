@@ -34,6 +34,7 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(result['Credentials']['username'], test_utils.test_username)
         self.assertEqual(result['Credentials']['password'], test_utils.test_password)
         self.assertEqual(result['PowerTrack']['url'], test_utils.test_powertrack_url)
+        self.assertEqual(result['PowerTrack']['rules_url'], test_utils.test_rules_url)
 
     def test_config_parsing_halt(self):
         """ Read the half config file and compare values. """
@@ -42,6 +43,7 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(result['Credentials']['username'], test_utils.test_username)
         self.assertEqual(result['Credentials']['password'], test_utils.test_password)
         self.assertEqual(result['PowerTrack']['url'], None)
+        self.assertEqual(result['PowerTrack']['rules_url'], None)
 
     def test_resolve_file_arg(self):
         """ Run the "resolve" method with just a filename and check if all info is loaded. """
@@ -50,6 +52,7 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(conf['auth'][0], test_utils.test_username)
         self.assertEqual(conf['auth'][1], test_utils.test_password)
         self.assertEqual(conf['url'], test_utils.test_powertrack_url)
+        self.assertEqual(conf['rules_url'], test_utils.test_rules_url)
 
     def test_resolve_conf_from_environment_variables(self):
         """ Run the "resolve" method providing env vars and check if all info is loaded. """
@@ -57,5 +60,6 @@ class ConfigTestCase(unittest.TestCase):
         test_utils.set_environment_config_vars()
         conf = gnippy_config.resolve({})
         self.assertEqual(conf['url'], test_utils.test_powertrack_url)
+        self.assertEqual(conf['rules_url'], test_utils.test_rules_url)
         self.assertEqual(conf['auth'][0], test_utils.test_username)
         self.assertEqual(conf['auth'][1], test_utils.test_password)

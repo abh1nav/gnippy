@@ -49,12 +49,14 @@ class PowerTrackClientTestCase(unittest.TestCase):
 
     def test_constructor_only_url(self):
         """
-            Initialize PowerTrackClient with only a url.
+            Initialize PowerTrackClient with only urls.
             The config file is provided for testability.
         """
         test_utils.generate_test_config_file_with_only_auth()
 
-        client = PowerTrackClient(_dummy_callback, url=test_utils.test_powertrack_url, config_file_path=config_file)
+        client = PowerTrackClient(_dummy_callback,
+                                  url=test_utils.test_powertrack_url,
+                                  config_file_path=config_file)
         expected_auth = (test_utils.test_username, test_utils.test_password)
         expected_url = test_utils.test_powertrack_url
 

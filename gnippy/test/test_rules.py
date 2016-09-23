@@ -70,22 +70,6 @@ class RulesTestCase(unittest.TestCase):
     def tearDown(self):
         test_utils.delete_test_config()
 
-    def test_build_rules_url(self):
-        """ Check rules URL for correctness. """
-        url = test_utils.test_powertrack_url
-        expected = test_utils.test_rules_url
-        rules_url = rules._generate_rules_url(url)
-        self.assertEqual(expected, rules_url)
-
-    def test_build_rules_url_bad(self):
-        """ Make sure rules URL fails with incorrect PowerTrack URL. """
-        try:
-            url = "http://google.com/asdf.xml"
-            rules._generate_rules_url(url)
-        except BadPowerTrackUrlException:
-            return
-        self.fail("_generate_rules_url was supposed to throw a BadPowerTrackUrlException")
-
     def test_build_post_object(self):
         """ Generate rules object to post. """
         rules_list = self._generate_rules_list()
@@ -257,20 +241,6 @@ class RulesTestCase(unittest.TestCase):
         """ Get one rule. """
         r = rules.get_rules(config_file_path=test_utils.test_config_path)
         self.assertEqual(1, len(r))
-
-    def test_generate_delete_url_normal_case(self):
-        """ Check if the Delete URL is generated correctly. """
-        conf = { 'url': 'https://stream.gnip.com:443/accounts/XXX/publishers/twitter/streams/track/prod.json' }
-        url = rules._generate_delete_url(conf)
-        self.assertEqual('https://api.gnip.com:443/accounts/XXX/publishers/twitter/streams/track/prod/rules.json?_method=delete',
-            url)
-
-    def test_generate_delete_url_with_query(self):
-        """ Account for https://github.com/abh1nav/gnippy/issues/15 """
-        conf = { 'url': 'https://stream.gnip.com:443/accounts/XXX/publishers/twitter/streams/track/prod.json?client=2' }
-        url = rules._generate_delete_url(conf)
-        self.assertEqual('https://api.gnip.com:443/accounts/XXX/publishers/twitter/streams/track/prod/rules.json?client=2&_method=delete',
-            url)
 
     @mock.patch('requests.post', good_delete)
     def test_delete_rules_single(self):

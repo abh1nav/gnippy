@@ -14,16 +14,6 @@ from gnippy import config
 from gnippy.errors import *
 
 
-def _generate_rules_url(url):
-    """ Generate a rules URL from a PowerTrack URL """
-    if ".json" not in url:
-        raise BadPowerTrackUrlException("Doesn't end with .json")
-    if "stream.gnip.com" not in url:
-        raise BadPowerTrackUrlException("Doesn't contain stream.gnip.com")
-
-    return url.replace(".json", "/rules.json").replace("stream.gnip.com", "api.gnip.com")
-
-
 def _generate_post_object(rules_list):
     """ Generate the JSON object that gets posted to the Rules API. """
     if isinstance(rules_list, list):
@@ -80,7 +70,7 @@ def _post(conf, built_rules):
             built_rules: A single or list of built rules.
     """
     _check_rules_list(built_rules)
-    rules_url = _generate_rules_url(conf['url'])
+    rules_url = conf['rules_url']
     post_data = json.dumps(_generate_post_object(built_rules))
     r = requests.post(rules_url, auth=conf['auth'], data=post_data)
     if not r.status_code in range(200, 300):
@@ -91,18 +81,18 @@ def _generate_delete_url(conf):
     """
         Generate the Rules URL for a DELETE request.
     """
-    generated_url = _generate_rules_url(conf['url'])
-    parsed_url = urlparse(generated_url)
+    rules_url = conf['rules_url']
+    parsed_url = urlparse(rules_url)
     query = parsed_url.query
     if query != '':
-        return generated_url.replace(query, query + "&_method=delete")
+        return rules_url.replace(query, query + "&_method=delete")
     else:
-        return generated_url + "?_method=delete"
+        return rules_url + "?_method=delete"
 
 def _delete(conf, built_rules):
     """
-        Generate the Rules URL and make a DELETE request.
-        DELETE data must look like:
+        Generate the Delete Rules URL and make a POST request.
+        POST data must look like:
         {
             "rules": [
                         {"value":"rule1", "tag":"tag1"},
@@ -153,7 +143,7 @@ def get_rules(**kwargs):
     """
         Get all the rules currently applied to PowerTrack.
         Optional Args:
-            url: Specify this arg if you're working with a PowerTrack connection that's not listed in your .gnippy file.
+            rules_url: Specify this arg if you're working with a PowerTrack connection that's not listed in your .gnippy file.
             auth: Specify this arg if you want to override the credentials in your .gnippy file.
 
         Returns:
@@ -164,7 +154,7 @@ def get_rules(**kwargs):
             ]
     """
     conf = config.resolve(kwargs)
-    rules_url = _generate_rules_url(conf['url'])
+    rules_url = conf['rules_url']
 
     def fail(reason):
         raise RulesGetFailedException("Could not get current rules for '%s'. Reason: '%s'" % (rules_url, reason))

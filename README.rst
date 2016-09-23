@@ -31,6 +31,7 @@ Create a .gnippy file and place it in your home directory. It should contain the
 
     [PowerTrack]
     url = https://my.gnip.powertrack/url.json
+    rules_url = https://api.gnip.powertrack/rules.json
 
 Fire up the client:
 
@@ -68,6 +69,7 @@ You can also configure gnippy using environment variables:
 .. code-block:: text
 
     GNIPPY_URL
+    GNIPPY_RULES_URL
     GNIPPY_AUTH_USERNAME
     GNIPPY_AUTH_PASSWORD
 
@@ -78,7 +80,7 @@ You can also configure gnippy using environment variables:
 Adding PowerTrack Rules
 -----------------------
 
-If you want to add `rules <http://support.gnip.com/customer/portal/articles/477713-rules-methods-documentation>`_ to your PowerTrack:
+If you want to add `rules <http://support.gnip.com/apis/powertrack/rules.html>`_ to your PowerTrack:
 
 .. code-block:: python
 
@@ -102,7 +104,7 @@ If you want to add `rules <http://support.gnip.com/customer/portal/articles/4777
         pass
 
     # OR ... manually pass in params - overrides any config files
-    rules.add_rule("My Rule String", tag="mytag", url="http://my.gnip.powertrack/url.json", \
+    rules.add_rule("My Rule String", tag="mytag", rules_url="https://api.gnip.powertrack/rules.json", \
                    auth=("uname", "pwd"))
 
 
