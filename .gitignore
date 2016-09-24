@@ -5,3 +5,4 @@
 gnippy.egg-info*
 .python-version
 /.tox
+build/
