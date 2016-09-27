@@ -107,7 +107,7 @@ def resolve(kwarg_dict):
     elif os.getenv('GNIPPY_RULES_URL'):
         conf['rules_url'] = os.getenv("GNIPPY_RULES_URL")
 
-    if "auth" not in conf or "url" not in conf or 'rules_url' not in conf:
+    if "auth" not in conf or ("url" not in conf and 'rules_url' not in conf):
 
         if "config_file_path" in kwarg_dict:
             file_conf = get_config(config_file_path=kwarg_dict['config_file_path'])
