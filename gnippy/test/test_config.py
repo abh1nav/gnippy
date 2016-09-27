@@ -63,3 +63,31 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(conf['rules_url'], test_utils.test_rules_url)
         self.assertEqual(conf['auth'][0], test_utils.test_username)
         self.assertEqual(conf['auth'][1], test_utils.test_password)
+
+    def test_resolve_conf_from_kwargs1(self):
+        """ Run the "resolve" method providing kwargs and check if all info is loaded. """
+        test_utils.delete_test_config()
+        rules_url = 'http://gnip.rules.url'
+        username = 'gnip-username'
+        password = 'gnip-password'
+        conf = gnippy_config.resolve({
+            'rules_url': rules_url,
+            'auth': (username, password)
+        })
+        self.assertEqual(conf['rules_url'], rules_url)
+        self.assertEqual(conf['auth'][0], username)
+        self.assertEqual(conf['auth'][1], password)
+
+    def test_resolve_conf_from_kwargs2(self):
+        """ Run the "resolve" method providing kwargs and check if all info is loaded. """
+        test_utils.delete_test_config()
+        url = 'http://gnip.url'
+        username = 'gnip-username'
+        password = 'gnip-password'
+        conf = gnippy_config.resolve({
+            'url': url,
+            'auth': (username, password)
+        })
+        self.assertEqual(conf['url'], url)
+        self.assertEqual(conf['auth'][0], username)
+        self.assertEqual(conf['auth'][1], password)
