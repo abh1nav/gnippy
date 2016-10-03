@@ -31,6 +31,9 @@ class PowerTrackClient():
         self.worker.setDaemon(True)
         self.worker.start()
 
+    def connected(self):
+        return not self.worker.stopped()
+
     def disconnect(self):
         self.worker.stop()
         self.worker.join()
@@ -90,3 +93,7 @@ class Worker(threading.Thread):
             else:
                 # re-raise the last exception as-is
                 raise
+        finally:
+            if not self.stopped():
+                # clean up and set the stop event
+                self.stop()
