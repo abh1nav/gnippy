@@ -25,10 +25,30 @@ class PowerTrackClient:
         self.url = c['url']
         self.auth = c['auth']
 
-    def connect(self):
-        self.worker = Worker(self.url, self.auth, self.callback,
-                             self.exception_callback)
+    def connect(self, backfill_minutes=None):
+
+        connection_url = self.url
+
+        if backfill_minutes:
+            assert type(backfill_minutes) is int, \
+                "backfill_minutes is not an integer: {0}".format(
+                    backfill_minutes)
+
+            assert backfill_minutes <= 5, \
+                "backfill_minutes should be 5 or less: {0}".format(
+                    backfill_minutes)
+
+            connection_url = "{0}?backfillMinutes={1}".format(
+                self.url, backfill_minutes)
+
+        self.worker = Worker(
+            url=connection_url,
+            auth=self.auth,
+            callback=self.callback,
+            exception_callback=self.exception_callback)
+
         self.worker.setDaemon(True)
+
         self.worker.start()
 
     def connected(self):
@@ -60,6 +80,7 @@ class PowerTrackClient:
 
 class Worker(threading.Thread):
     """ Background worker to fetch data without blocking """
+
     def __init__(self, url, auth, callback, exception_callback=None):
         super(Worker, self).__init__()
         self.url = url
@@ -76,10 +97,12 @@ class Worker(threading.Thread):
 
     def run(self):
         try:
-            with closing(requests.get(self.url, auth=self.auth, stream=True)) as r:
+            with closing(
+                    requests.get(self.url, auth=self.auth, stream=True)) as r:
                 if r.status_code != 200:
                     self.stop()
-                    raise Exception("GNIP returned HTTP {}".format(r.status_code))
+                    raise Exception(
+                        "GNIP returned HTTP {}".format(r.status_code))
 
                 for line in r.iter_lines():
                     if line:
