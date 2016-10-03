@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import os
+from time import sleep
+
 import mock
+
 try:
     import unittest2 as unittest
 except ImportError:
@@ -22,6 +25,28 @@ class TestException(Exception):
 
 def get_exception(*args, **kwargs):
     raise TestException("This is a test exception")
+
+
+def iter_lines_generator():
+
+    n = 0
+    while True:
+
+        yield "arbitrary string value {0}".format(n)
+        n += 1
+
+def get_request_stream(url, auth, stream):
+
+    mocked_stream = mock.MagicMock()
+
+    p = mock.PropertyMock()
+    p.return_value = 200
+
+    type(mocked_stream).status_code = p
+
+    mocked_stream.iter_lines.side_effect = iter_lines_generator
+
+    return mocked_stream
 
 
 config_file = test_utils.test_config_path
@@ -116,3 +141,34 @@ class PowerTrackClientTestCase(unittest.TestCase):
         actual_ex = actual_exinfo[1]
         self.assertIsInstance(actual_ex, Exception)
         self.assertEqual(actual_ex.message, "This is a test exception")
+
+    @mock.patch('requests.get', get_exception)
+    def test_connected_status_after_exception_is_false(self):
+        """ When an exception is thrown the client is no longer connected. """
+        test_utils.generate_test_config_file()
+
+        client = PowerTrackClient(_dummy_callback,
+                                  config_file_path=config_file)
+        client.connect()
+
+        sleep(2)
+
+        self.assertFalse(client.connected())
+
+        client.disconnect()
+
+    @mock.patch('requests.get', get_request_stream)
+    def test_connected_status_true_when_running(self):
+        """ Once the client connect method is called the client reports as connected. """
+        test_utils.generate_test_config_file()
+
+        client = PowerTrackClient(_dummy_callback,
+                                  config_file_path=config_file)
+
+        client.connect()
+
+        self.assertTrue(client.connected())
+
+        client.disconnect()
+
+        self.assertFalse(client.connected())

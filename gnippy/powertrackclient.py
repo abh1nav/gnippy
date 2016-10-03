@@ -9,7 +9,7 @@ import requests
 from gnippy import config
 
 
-class PowerTrackClient():
+class PowerTrackClient:
     """
         PowerTrackClient allows you to connect to the GNIP
         power track stream and fetch data.
@@ -32,6 +32,7 @@ class PowerTrackClient():
         self.worker.start()
 
     def connected(self):
+
         return not self.worker.stopped()
 
     def disconnect(self):
