@@ -155,8 +155,6 @@ class PowerTrackClientTestCase(unittest.TestCase):
 
         self.assertFalse(client.connected())
 
-        client.disconnect()
-
     @mock.patch('requests.get', get_request_stream)
     def test_connected_status_true_when_running(self):
         """ Once the client connect method is called the client reports as connected. """
