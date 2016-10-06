@@ -9,7 +9,7 @@ import requests
 from gnippy import config
 
 
-class PowerTrackClient():
+class PowerTrackClient:
     """
         PowerTrackClient allows you to connect to the GNIP
         power track stream and fetch data.
@@ -30,6 +30,10 @@ class PowerTrackClient():
                              self.exception_callback)
         self.worker.setDaemon(True)
         self.worker.start()
+
+    def connected(self):
+
+        return not self.worker.stopped()
 
     def disconnect(self):
         self.worker.stop()
@@ -90,3 +94,7 @@ class Worker(threading.Thread):
             else:
                 # re-raise the last exception as-is
                 raise
+        finally:
+            if not self.stopped():
+                # clean up and set the stop event
+                self.stop()
