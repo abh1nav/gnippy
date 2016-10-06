@@ -31,7 +31,7 @@ def _check_rules_list(rules_list):
     if not isinstance(rules_list, list):
         fail()
 
-    expected = ("value", "tag")
+    expected = ("value", "tag", "id")
     for r in rules_list:
         if not isinstance(r, dict):
             fail()
@@ -77,6 +77,7 @@ def _post(conf, built_rules):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
         raise RuleAddFailedException(error_text)
 
+
 def _generate_delete_url(conf):
     """
         Generate the Rules URL for a DELETE request.
@@ -88,6 +89,7 @@ def _generate_delete_url(conf):
         return rules_url.replace(query, query + "&_method=delete")
     else:
         return rules_url + "?_method=delete"
+
 
 def _delete(conf, built_rules):
     """
@@ -111,6 +113,7 @@ def _delete(conf, built_rules):
     if not r.status_code in range(200,300):
         error_text = "HTTP Response Code: %s, Text: '%s'" % (str(r.status_code), r.text)
         raise RuleDeleteFailedException(error_text)
+
 
 def build(rule_string, tag=None):
     """
