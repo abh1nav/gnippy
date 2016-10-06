@@ -4,9 +4,30 @@ from contextlib import closing
 import sys
 import threading
 
+try:
+    import urlparse
+    from urllib import urlencode
+except: # For Python 3
+    import urllib.parse as urlparse
+    from urllib.parse import urlencode
+
 import requests
 
 from gnippy import config
+
+
+def append_backfill_to_url(url, backfill_minutes):
+    parsed = list(urlparse.urlparse(url))
+
+    params = {'backfillMinutes': backfill_minutes}
+
+    qs = dict(urlparse.parse_qsl(parsed[4]))
+
+    qs.update(params)
+
+    parsed[4] = urlencode(qs)
+
+    return urlparse.urlunparse(parsed)
 
 
 class PowerTrackClient:
@@ -27,6 +48,19 @@ class PowerTrackClient:
 
     def connect(self, backfill_minutes=None):
 
+        connection_url = self.get_connection_url(backfill_minutes)
+
+        self.worker = Worker(
+            url=connection_url,
+            auth=self.auth,
+            callback=self.callback,
+            exception_callback=self.exception_callback)
+
+        self.worker.setDaemon(True)
+
+        self.worker.start()
+
+    def get_connection_url(self, backfill_minutes=None):
         connection_url = self.url
 
         if backfill_minutes:
@@ -38,18 +72,10 @@ class PowerTrackClient:
                 "backfill_minutes should be 5 or less: {0}".format(
                     backfill_minutes)
 
-            connection_url = "{0}?backfillMinutes={1}".format(
-                self.url, backfill_minutes)
+            connection_url = append_backfill_to_url(
+                connection_url, backfill_minutes)
 
-        self.worker = Worker(
-            url=connection_url,
-            auth=self.auth,
-            callback=self.callback,
-            exception_callback=self.exception_callback)
-
-        self.worker.setDaemon(True)
-
-        self.worker.start()
+        return connection_url
 
     def connected(self):
 

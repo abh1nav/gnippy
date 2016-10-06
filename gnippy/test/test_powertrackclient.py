@@ -5,10 +5,8 @@ from time import sleep
 
 import mock
 
-<<<<<<< 5aad86859b37e17aa6cd8c972150886fdc989cbb
-=======
+from gnippy.powertrackclient import append_backfill_to_url
 
->>>>>>> added option to specify backfill minutes on the connect call
 try:
     import unittest2 as unittest
 except ImportError:
@@ -222,3 +220,24 @@ class PowerTrackClientTestCase(unittest.TestCase):
         client = PowerTrackClient(_dummy_callback, config_file_path=config_file)
 
         self.assertRaises(AssertionError, client.connect, backfill_minutes)
+
+    def test_append_backfill_to_url_appends_backfillMinutes_param(self):
+
+        base_url = "http://www.twitter.com"
+        backfill_minutes = 2
+        expected_url = "http://www.twitter.com?backfillMinutes=2"
+
+        returned_value = append_backfill_to_url(base_url, backfill_minutes)
+
+        self.assertEqual(returned_value, expected_url)
+
+    def test_append_backfill_to_url_replaces_existing_backfillMinutes_param(
+            self):
+
+        base_url = "http://www.twitter.com?backfillMinutes=5"
+        backfill_minutes = 1
+        expected_url = "http://www.twitter.com?backfillMinutes=1"
+
+        returned_value = append_backfill_to_url(base_url, backfill_minutes)
+
+        self.assertEqual(returned_value, expected_url)
