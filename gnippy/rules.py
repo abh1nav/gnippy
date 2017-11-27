@@ -31,7 +31,7 @@ def _check_rules_list(rules_list):
     if not isinstance(rules_list, list):
         fail()
 
-    expected = ("value", "tag", "id")
+    expected = ("value", "tag", "id", "id_str")
     for r in rules_list:
         if not isinstance(r, dict):
             fail()
