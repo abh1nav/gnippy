@@ -37,6 +37,6 @@ setup(
     license=license,
     install_requires=[
         "requests>=2.8.1,<3.0.0",
-        "six==1.10.0"
+        "six>=1.10.0"
     ]
 )
